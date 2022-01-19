@@ -12,10 +12,10 @@ export function OptimizedImage({
     size: { width: number; height?: number };
   }[];
 }) {
-  let url = src ? optimizerUrl + "?src=" + encodeURIComponent(src) : src;
+  let url = src + '?1';
 
   let props: ComponentPropsWithoutRef<"img"> = {
-    src: url + `&width=${rest.width || ""}&height=${rest.height || ""}`,
+    src: url + `&w=${rest.width || ""}&h=${rest.height || ""}`,
   };
 
   let largestImageWidth = 0;
@@ -28,7 +28,7 @@ export function OptimizedImage({
         srcSet += ", ";
       }
       let srcSetUrl =
-        url + `&width=${size.width}&height=${size.height || ""} ${size.width}w`;
+        url + `&w=${size.width}&h=${size.height || ""}`;
       srcSet += srcSetUrl;
 
       if (maxWidth) {
