@@ -14,15 +14,9 @@ import { getTranslations } from "~/translations.server";
 
 export interface VendureProviderOptions {
     cache?: RequestResponseCache;
-    maxAgeSeconds?: number | ((request: Request) => number);
-    shop: string;
 }
 
-export function createVendureProvider({
-                                          cache,
-                                          maxAgeSeconds,
-                                          shop,
-                                      }: VendureProviderOptions): EcommerceProvider {
+export function createVendureProvider({ cache }: VendureProviderOptions): EcommerceProvider {
     let href = process.env.VENDURE_API_URL || `https://demo.vendure.io/shop-api`;
 
     async function query(
@@ -39,15 +33,6 @@ export function createVendureProvider({
             },
             body: JSON.stringify({query, variables}),
         });
-
-        let maxAge =
-            typeof maxAgeSeconds === "function"
-                ? maxAgeSeconds(request.clone())
-                : maxAgeSeconds;
-
-        if (!nocache && cache && typeof maxAge === "number") {
-            return cache(request, maxAge).then((res) => res.json());
-        }
 
         const result = await fetch(request).then((res) => res.json());
         if (result.errors?.length) {

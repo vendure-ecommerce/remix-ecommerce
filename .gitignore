@@ -5,6 +5,7 @@ schema.graphql
 
 /.cache
 /build
+/netlify/functions/server/build
 /public/build
 /app/styles/global.css
 .env
