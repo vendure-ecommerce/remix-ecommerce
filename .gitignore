@@ -12,3 +12,6 @@ schema.graphql
 /cypress/videos
 /cypress/screenshots
 /runner-results
+
+# Local Netlify folder
+.netlify
