@@ -16,7 +16,7 @@ export interface VendureProviderOptions {
     cache?: RequestResponseCache;
 }
 
-export function createVendureProvider({ cache }: VendureProviderOptions): EcommerceProvider {
+export function createVendureProvider({cache}: VendureProviderOptions): EcommerceProvider {
     let href = process.env.VENDURE_API_URL || `https://demo.vendure.io/shop-api`;
 
     async function query(
@@ -161,7 +161,10 @@ export function createVendureProvider({ cache }: VendureProviderOptions): Ecomme
         },
         async getFeaturedProducts(locale) {
             let json = await query(locale, searchProducts, {
-                first: 12,
+                input: {
+                    groupByProduct: true,
+                    take: 12
+                }
             });
 
             let products = json.data.search.items.map(
@@ -246,6 +249,8 @@ export function createVendureProvider({ cache }: VendureProviderOptions): Ecomme
             perPage = 30,
             nocache
         ) {
+            let take = perPage;
+            let skip = +(cursor ?? 0);
             let q = "";
             if (search) {
                 q = search;
@@ -256,14 +261,12 @@ export function createVendureProvider({ cache }: VendureProviderOptions): Ecomme
             switch (sort) {
                 case "price-asc":
                     sortVariables = {
-                        sortKey: "PRICE",
-                        reverse: false,
+                        price: 'ASC'
                     };
                     break;
                 case "price-desc":
                     sortVariables = {
-                        sortKey: "PRICE",
-                        reverse: true,
+                        price: 'DESC'
                     };
                     break;
             }
@@ -272,19 +275,22 @@ export function createVendureProvider({ cache }: VendureProviderOptions): Ecomme
                 locale,
                 searchProducts,
                 {
-                    ...sortVariables,
-                    first: perPage,
-                    query: q,
-                    collection: category,
-                    cursor,
+                    input: {
+                        sort: sortVariables,
+                        groupByProduct: true,
+                        skip,
+                        take,
+                        term: q,
+                        collectionSlug: category,
+                    }
                 },
                 nocache
             );
 
             let {items, totalItems} = json.data.search;
 
-            let nextPageCursor: string | undefined = undefined;
-            let hasNextPage = false;
+            let nextPageCursor = skip + take;
+            let hasNextPage = nextPageCursor < totalItems;
             let products =
                 items.map(
                     (item: any): Product => {
@@ -424,19 +430,8 @@ let searchResult = /* GraphQL */ `
 `;
 
 let searchProducts = /* GraphQL */ `
-    query searchProducts(
-        $first: Int = 20
-        $query: String
-        $collectionSlug: String
-    ) {
-        search(
-            input: {
-                term: $query
-                collectionSlug: $collectionSlug
-                groupByProduct: true
-                take: $first
-            }
-        ) {
+    query searchProducts($input: SearchInput!) {
+        search(input: $input) {
             totalItems
             items {
                 ...searchResult
