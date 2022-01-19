@@ -32,7 +32,6 @@
     "decimal.js": "^10.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "redis": "^4.0.1",
     "remix": "0.0.0-experimental-f218dd8b",
     "sharp": "^0.29.3"
   },

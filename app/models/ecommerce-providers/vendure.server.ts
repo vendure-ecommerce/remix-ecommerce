@@ -169,7 +169,7 @@ export function createVendureProvider({ cache }: VendureProviderOptions): Ecomme
                     formattedPrice: formatPrice(item.priceWithTax.min, item.currencyCode, locale),
                     id: item.id,
                     defaultVariantId: item.productVariantId,
-                    image: item.productAsset.preview + '?preview=mid',
+                    image: item.productAsset.preview + '?w=500&h=500',
                     slug: item.slug,
                     title: item.productName,
                 })
@@ -223,8 +223,8 @@ export function createVendureProvider({ cache }: VendureProviderOptions): Ecomme
                 formattedPrice: formatPrice(price, product.variants[0].currencyCode, locale),
                 id: product.id,
                 defaultVariantId: defaultVariantId!,
-                image: product.featuredAsset.preview + '?preview=mid',
-                images: product.assets.map((asset: any) => asset.preview + '?preview=mid'),
+                image: product.featuredAsset.preview + '?preset=large',
+                images: product.assets.map((asset: any) => asset.preview + '?preset=large'),
                 slug: product.slug,
                 title: product.name,
                 description: product.description,
@@ -292,7 +292,7 @@ export function createVendureProvider({ cache }: VendureProviderOptions): Ecomme
                             formattedPrice: formatPrice(item.priceWithTax.min, item.currencyCode, locale),
                             id: item.productId,
                             defaultVariantId: item.productVariantId,
-                            image: item.productAsset.preview + '?preview=mid',
+                            image: item.productAsset.preview + '?w=500&h=500',
                             slug: item.slug,
                             title: item.productName,
                         };
