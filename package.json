@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.4.2",
+    "@netlify/functions": "^0.10.0",
     "@reach/auto-id": "^0.16.0",
     "@remix-run/netlify": "^1.1.1",
     "@remix-run/node": "0.0.0-experimental-f218dd8b",
