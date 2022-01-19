@@ -23,7 +23,7 @@ export function createVendureProvider({
                                           maxAgeSeconds,
                                           shop,
                                       }: VendureProviderOptions): EcommerceProvider {
-    let href = `https://demo.vendure.io/shop-api`;
+    let href = process.env.VENDURE_API_URL || `https://demo.vendure.io/shop-api`;
 
     async function query(
         locale: string,
@@ -59,7 +59,6 @@ export function createVendureProvider({
     return {
         async getCartInfo(locale, items) {
             const productIds = items.map((item) => item.variantId.split('_')[0]);
-            console.log(`productIds`, productIds);
             let json = await query(locale, getProductsByIds, {
                 ids: productIds,
             }, true);
@@ -185,7 +184,7 @@ export function createVendureProvider({
                     formattedPrice: formatPrice(item.priceWithTax.min, item.currencyCode, locale),
                     id: item.id,
                     defaultVariantId: item.productVariantId,
-                    image: item.productAsset.preview,
+                    image: item.productAsset.preview + '?preview=mid',
                     slug: item.slug,
                     title: item.productName,
                 })
@@ -201,8 +200,6 @@ export function createVendureProvider({
         },
         async getProduct(locale, slug, selectedOptions) {
             let json = await query(locale, getProductQuery, {slug});
-
-            console.log(selectedOptions);
             if (!json.data.product) {
                 return undefined;
             }
@@ -241,8 +238,8 @@ export function createVendureProvider({
                 formattedPrice: formatPrice(price, product.variants[0].currencyCode, locale),
                 id: product.id,
                 defaultVariantId: defaultVariantId!,
-                image: product.featuredAsset.preview,
-                images: product.assets.map((asset: any) => asset.preview),
+                image: product.featuredAsset.preview + '?preview=mid',
+                images: product.assets.map((asset: any) => asset.preview + '?preview=mid'),
                 slug: product.slug,
                 title: product.name,
                 description: product.description,
@@ -310,7 +307,7 @@ export function createVendureProvider({
                             formattedPrice: formatPrice(item.priceWithTax.min, item.currencyCode, locale),
                             id: item.productId,
                             defaultVariantId: item.productVariantId,
-                            image: item.productAsset.preview,
+                            image: item.productAsset.preview + '?preview=mid',
                             slug: item.slug,
                             title: item.productName,
                         };

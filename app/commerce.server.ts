@@ -7,9 +7,6 @@ import { createVendureProvider } from '~/models/ecommerce-providers/vendure.serv
 let commerce = createVendureProvider({
   shop: process.env.SHOPIFY_STORE!,
   maxAgeSeconds: 60,
-  cache: createSwrRedisCache({
-    redisClient,
-  }),
 });
 
 export default commerce;
